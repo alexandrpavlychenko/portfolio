@@ -1,0 +1,113 @@
+@use "fonts.scss";
+@use "variables.scss" as var;
+
+
+@mixin font-main-text {
+  font-family: var.$main-font;
+  font-size: var.$font-s;
+  line-height: var.$line-height-mobile-m;
+  color: var.$color-main-text;
+
+  @media (min-width: var.$tablet-width) {
+    font-size: var.$font-desktop-m;
+    line-height: var.$line-height-tablet-m;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    line-height: var.$line-height-desktop-m;
+  }
+}
+
+@mixin font-skills-text {
+  font-size: var.$font-skills;
+  line-height: var.$line-height-desktop-m;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var.$color-main-text;
+}
+
+@mixin font-button {
+  font-family: var.$main-font;
+  font-size: var.$font-s;
+  line-height: var.$line-height-desktop-m;
+  font-weight: var.$medium;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 1px;
+  color: var.$color-alter-bg;
+}
+
+@mixin font-subsection-heading {
+  font-size: var.$font-mobile-l;
+  line-height: var.$line-height-mobile-l;
+  font-weight: var.$medium;
+  text-align: center;
+
+  @media (min-width: var.$tablet-width) {
+    font-size: var.$font-desktop-l;
+    line-height: var.$line-height-desktop-l;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    text-align: left;
+  }
+}
+
+@mixin font-promo-subscription-text {
+  font-size: var.$font-mobile-l;
+  line-height: var.$line-height-mobile-l;
+  text-align: center;
+  color: var.$color-accented-text;
+
+  @media (min-width: var.$tablet-width) {
+    font-size: var.$font-desktop-l;
+    line-height: var.$line-height-desktop-ll;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    text-align: left;
+  }
+}
+
+@mixin font-section-heading {
+  font-size: var.$font-mobile-xl;
+  line-height: var.$line-height-mobile-xl;
+  font-weight: var.$medium;
+  text-align: center;
+  color: var.$color-accented-text;
+
+  @media (min-width: var.$tablet-width) {
+    font-size: var.$font-tablet-xl;
+    line-height: var.$line-height-tablet-xl;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    font-size: var.$font-desktop-xl;
+    line-height: var.$line-height-desktop-xl;
+  }
+}
+
+@mixin font-main-heading {
+  font-size: var.$font-mobile-xxl;
+  line-height: var.$line-height-mobile-xxl;
+  font-weight: var.$medium;
+  text-align: center;
+
+  @media (min-width: var.$tablet-width) {
+    font-size: var.$font-tablet-xxl;
+    line-height: var.$line-height-tablet-xxl;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    font-size: var.$font-desktop-xxl;
+    line-height: var.$line-height-desktop-xxl;
+    text-align: left;
+  }
+}
+
+@mixin list-reset {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
