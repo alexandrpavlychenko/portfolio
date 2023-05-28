@@ -1,0 +1,32 @@
+@use "../global/fonts.scss";
+@use "../global/variables.scss" as var;
+@use "../global/mixins.scss" as mixin;
+
+.desсription-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.description-list__item {
+  margin: 0 0 12px;
+
+  @media (min-width: var.$tablet-width) {
+    margin: 0 0 16px;
+  }
+}
+
+.description-list__term {
+  display: inline;
+
+  font-weight: var.$bold;
+
+  &--med {
+    font-weight: var.$normal;
+  }
+}
+
+.description-list__definition {
+  display: inline;
+
+  margin: 0;
+}

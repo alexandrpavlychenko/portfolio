@@ -1,0 +1,37 @@
+@use "../global/fonts.scss";
+@use "../global/variables.scss" as var;
+@use "../global/mixins.scss" as mixin;
+
+.portfolio {
+  padding: 0 0 60px;
+
+  @media (min-width: var.$tablet-width) {
+    padding: 0 0 90px;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    padding: 0 0 120px;
+  }
+}
+
+.portfolio__wrapper {
+  @media (min-width: var.$desktop-width) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px;
+  }
+}
+
+.portfolio__heading {
+  @media (min-width: var.$desktop-width) {
+    grid-column: span 2;
+  }
+}
+
+.portfolio__subsection {
+  text-align: center;
+
+  @media (min-width: var.$desktop-width) {
+    text-align: left;
+  }
+}

@@ -1,0 +1,124 @@
+@use "../global/fonts.scss";
+@use "../global/variables.scss" as var;
+@use "../global/mixins.scss" as mixin;
+
+.slider {
+  display: grid;
+  margin: 0 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.slider__slides-list {
+  margin: 0 auto;
+  padding: 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.slider__image-wrapper {
+  margin: 0 auto;
+  width: 200px;
+
+  @media (min-width: var.$tablet-width) {
+    width: 506px;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    width: 764px;
+  }
+}
+
+.slider__controls {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+
+  display: flex;
+  justify-content: space-between;
+  width: calc(320px - (2 * 20px));
+
+  transform: translate(-50%, -50%);
+
+  @media (min-width: var.$tablet-width) {
+    width: calc(768px - (2 * 60px));
+  }
+
+  @media (min-width: var.$desktop-width) {
+    width: 960px;
+  }
+}
+
+.slider__control {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+
+  color: var.$color-main-text;
+
+  background-color: rgba(242, 242, 242, 0.3);
+  border: 2px solid var.$color-main-text;
+  border-radius: 50%;
+
+  @media (min-width: var.$tablet-width) {
+    width: 38px;
+    height: 38px;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    width: 46px;
+    height: 46px;
+  }
+
+  &:hover,
+  &:focus {
+    color: var.$color-accented-text;
+
+    border-color: var.$color-accented-text;
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
+
+  &:disabled {
+    color: var.$color-main-text;
+
+    border-color: var.$color-main-text;
+
+    opacity: 0.5;
+  }
+}
+
+.slider__control .slider__control-image {
+  width: 7px;
+  height: 12px;
+
+  @media (min-width: var.$tablet-width) {
+    width: 8px;
+    height: 14px;
+  }
+
+  @media (min-width: var.$desktop-width) {
+    width: 10px;
+    height: 18px;
+  }
+}
+
+.slider__control--prev .slider__control-image {
+  transform: translateX(-1px) rotate(180deg);
+
+  @media (min-width: var.$tablet-width) {
+    transform: translateX(-2px) rotate(180deg);
+  }
+}
+
+.slider__control--next .slider__control-image {
+  @media (min-width: var.$tablet-width) {
+    transform: translateX(2px);
+  }
+}
