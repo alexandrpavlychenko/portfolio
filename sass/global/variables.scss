@@ -1,0 +1,53 @@
+@use "fonts.scss";
+
+$main-font: "Montserrat",  "Helvetica", "Arial", sans-serif;
+
+$font-s: 14px;
+$font-desktop-m: 16px;
+$font-mobile-l: 20px;
+$font-skills: 24px;
+$font-desktop-l: 32px;
+$font-mobile-xl: 32px;
+$font-tablet-xl: 60px;
+$font-desktop-xl: 72px;
+$font-mobile-xxl: 40px;
+$font-tablet-xxl: 70px;
+$font-desktop-xxl: 96px;
+
+$line-height-mobile-m: 21px;
+$line-height-tablet-m: 24px;
+$line-height-desktop-m: 32px;
+$line-height-mobile-l: 30px;
+$line-height-desktop-l: 40px;
+$line-height-desktop-ll: 48px;
+$line-height-mobile-xl: 48px;
+$line-height-tablet-xl: 74px;
+$line-height-desktop-xl: 88px;
+$line-height-mobile-xxl: 50px;
+$line-height-tablet-xxl: 82px;
+$line-height-desktop-xxl: 112px;
+
+$normal: 400;
+$medium: 500;
+$bold: 700;
+
+$color-main-bg: #141530;
+$color-main-text: #f2f2f2;
+$color-accented-text: #f9dd79;
+$color-alter-bg: #0b0c23;
+$color-border: #5053a8;
+$color-main-white: #ffffff;
+$color-border-skills-level: #dee5fb;
+$color-skills-progress: #8da2ed;
+$color-button-hover: #f9e7a8;
+$color-button-active: #b69e4b;
+$color-footer-bg: #212349;
+
+$shadow-button: 0 4px 16px rgba(249, 221, 121, 0.4);
+$shadow-button-hover: 0 4px 32px rgba(249, 221, 121, 0.6);
+
+$mobile-width-only: 767px;
+$tablet-width: 768px;
+$desktop-width: 1408px;
+$more-2k-width: 3841px;
+$double-density: 2dppx;
