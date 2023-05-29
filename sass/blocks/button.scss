@@ -1,0 +1,28 @@
+@use "../global/fonts.scss";
+@use "../global/variables.scss" as var;
+@use "../global/mixins.scss" as mixin;
+
+.button {
+  padding: 8px 24px;
+  width: 223px;
+  display: block;
+
+  @include mixin.font-button;
+
+  background-color: var.$color-accented-text;
+  box-shadow: var.$shadow-button;
+  border-radius: 24px;
+
+  transition: background-color 100ms, box-shadow 100ms;
+
+  &:hover,
+  &:focus {
+    background-color: var.$color-button-hover;
+    box-shadow: var.$shadow-button-hover;
+  }
+
+  &:active {
+    background-color: var.$color-button-active;
+    box-shadow: none;
+  }
+}

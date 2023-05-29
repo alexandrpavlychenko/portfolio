@@ -1,0 +1,22 @@
+@use "../global/fonts.scss";
+@use "../global/variables.scss" as var;
+@use "../global/mixins.scss" as mixin;
+
+.page {
+  height: 100%;
+
+  background-color: var.$color-main-bg;
+}
+
+.page__body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  margin: 0;
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+
+  @include mixin.font-main-text;
+
+  background-color: var.$color-main-bg;
+}

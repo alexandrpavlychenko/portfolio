@@ -1,0 +1,29 @@
+/* GLOBAL */
+@use "global/fonts.scss";
+@use "global/variables.scss" as var;
+@use "global/mixins.scss" as mixin;
+@use "global/global-selectors.scss";
+
+/* HELPERS */
+@use "helpers/visually-hidden.scss";
+@use "helpers/container.scss";
+
+/* BLOCKS */
+@use "blocks/page.scss";
+@use "blocks/page-header.scss";
+@use "blocks/promo.scss";
+@use "blocks/section.scss";
+@use "blocks/intro.scss";
+@use "blocks/user-image-wrapper.scss";
+@use "blocks/subsection.scss";
+@use "blocks/skills-list.scss";
+@use "blocks/portfolio.scss";
+@use "blocks/button.scss";
+@use "blocks/works-list.scss";
+@use "blocks/achievements.scss";
+@use "blocks/slider.scss";
+@use "blocks/page-footer.scss";
+@use "blocks/knowledges-and-skills";
+@use "blocks/education.scss";
+@use "blocks/description-list.scss";
+@use "blocks/add-info.scss";
