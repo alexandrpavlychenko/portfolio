@@ -1,0 +1,54 @@
+name: Project check
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Clean old dependencies
+        run: rm -rf node_modules package-lock.json
+
+      - name: Clear npm cache
+        run: npm cache clean --force
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Check Node version
+        run: node -v && npm -v
+
+      - name: List files
+        run: ls -la
+
+      - name: Install dependencies
+        run: npm install
+
+
+      - name: Run checks
+        run: npm run lint
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          folder: ./build
+          branch: gh-pages
