@@ -29,7 +29,7 @@
         "preview": "gulp --gulpfile gulpfile.mjs buildProd && gulp --gulpfile gulpfile.mjs startServer",
         "preview:3000": "cross-env BS_PORT=3000 gulp --gulpfile gulpfile.mjs buildProd && cross-env BS_PORT=3000 gulp --gulpfile gulpfile.mjs startServer",
 
-        "deploy": "npm run build && gh-pages -d build -b gh-pages -r https://github.com/alexandrpavlychenko/light-of-scripture.git"
+        "deploy": "npm run build && gh-pages -d build"
     },
     "browserslist": [
         "last 2 versions",
