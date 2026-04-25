@@ -53,18 +53,18 @@ export function processMarkup() {
 
 // -------------------- STYLES --------------------
 export function processStyles() {
-    return gulp.src('source/sass/**/*.scss', { sourcemaps: isDevelopment })
+    return gulp.src('source/sass/**/*.scss', { sourcemaps: true })
         .pipe(plumber({ errorHandler: onError('styles') }))
         .pipe(compileSass({
-            outputStyle: isDevelopment ? 'expanded' : 'compressed'
+            outputStyle: 'compressed'
         }))
         .pipe(postcss([
             postUrl({ url: 'rebase' }),
             autoprefixer(),
-            ...(isDevelopment ? [] : [csso()])
+            csso()
         ]))
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('build/css', { sourcemaps: isDevelopment }))
+        .pipe(gulp.dest('build/css', { sourcemaps: true }))
         .pipe(server.stream());
 }
 
@@ -146,6 +146,12 @@ export function copyFavicons() {
     return Promise.resolve();
 }
 
+// -------------------- FONTS --------------------
+export function copyFonts() {
+    return gulp.src('source/fonts/**/*.{woff,woff2,ttf,otf}')
+        .pipe(gulp.dest('build/fonts'));
+}
+
 // -------------------- SERVER --------------------
 export function startServer(done) {
     server.init({
@@ -179,10 +185,12 @@ export const compileProject = gulp.series(
         processMarkup,
         processStyles,
         processScripts,
-        copyFavicons
+        copyFavicons,
+        copyFonts
     )
 );
 
+// -------------------- PROD --------------------
 export const buildProd = gulp.series(
     compileProject
 );
