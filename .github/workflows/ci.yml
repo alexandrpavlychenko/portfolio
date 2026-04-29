@@ -1,52 +1,44 @@
-name: Project check
+name: CI & Deploy
 
 on:
   push:
     branches:
-      - master
+      - main
 
 permissions:
   contents: write
 
 jobs:
-  deploy:
-    name: Deploy
+  build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-
-      - name: Clean old dependencies
-        run: rm -rf node_modules package-lock.json
-
-      - name: Clear npm cache
-        run: npm cache clean --force
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 24
+          cache: 'npm'
 
       - name: Check Node version
         run: node -v && npm -v
 
-      - name: List files
-        run: ls -la
-
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
+      - name: Run EditorConfig check
+        run: npm run editorconfig
 
-      - name: Run checks
+      - name: Run lint
         run: npm run lint
 
       - name: Build project
         run: npm run build
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

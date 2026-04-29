@@ -18,10 +18,13 @@ import { deleteAsync } from 'del';
 import browser from 'browser-sync';
 import { exec } from 'child_process';
 
-import fg from 'fast-glob';
+import svgo from 'gulp-svgmin';
+import svgstore from 'gulp-svgstore';
+
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
+import fg from 'fast-glob';
 
 // -------------------- CONFIG --------------------
 const compileSass = gulpSass(dartSass);
@@ -43,10 +46,10 @@ export const clean = () => deleteAsync('build');
 export function processMarkup() {
     return gulp.src('source/*.html')
         .pipe(plumber({ errorHandler: onError('html') }))
-        .pipe(gulpIf(!isDevelopment, htmlmin({
+        .pipe(htmlmin({
             collapseWhitespace: true,
             removeComments: true
-        })))
+        }))
         .pipe(gulp.dest('build'))
         .pipe(server.stream());
 }
@@ -77,6 +80,15 @@ export function processScripts() {
         .pipe(server.stream());
 }
 
+// -------------------- SVG --------------------
+export function sprite() {
+    return gulp.src('source/img/icons/*.svg')
+        .pipe(svgo())
+        .pipe(svgstore({ inlineSvg: true }))
+        .pipe(rename('sprite.svg'))
+        .pipe(gulp.dest('build/img'));
+}
+
 // -------------------- IMAGES HELPERS --------------------
 async function processImages(format, encoder) {
     const files = fg.sync('source/img/**/*.{jpg,jpeg,png}')
@@ -93,7 +105,7 @@ async function processImages(format, encoder) {
     }
 }
 
-// -------------------- ORIGINAL IMAGES --------------------
+// -------------------- IMAGES --------------------
 export function images() {
     const files = fg.sync('source/img/**/*.{jpg,jpeg,png}');
 
@@ -107,22 +119,28 @@ export function images() {
     return Promise.resolve();
 }
 
-// -------------------- WEBP --------------------
-export async function webpImages() {
-    return processImages('webp', (file, out) =>
-        sharp(file)
-            .webp({ quality: 80 })
-            .toFile(out)
-    );
-}
+// -------------------- MODERN IMAGES --------------------
+export async function modernImages() {
+    const files = fg.sync('source/img/**/*.{jpg,jpeg,png}')
+        .filter(file => !file.includes('favicon'));
 
-// -------------------- AVIF --------------------
-export async function avifImages() {
-    return processImages('avif', (file, out) =>
-        sharp(file)
-            .avif({ quality: 80 })
-            .toFile(out)
-    );
+    await Promise.all(files.map(async (file) => {
+        const webpOut = file
+            .replace('source/img', 'build/img/webp')
+            .replace(/\.(jpg|jpeg|png)$/, '.webp');
+
+        const avifOut = file
+            .replace('source/img', 'build/img/avif')
+            .replace(/\.(jpg|jpeg|png)$/, '.avif');
+
+        fs.mkdirSync(path.dirname(webpOut), { recursive: true });
+        fs.mkdirSync(path.dirname(avifOut), { recursive: true });
+
+        await Promise.all([
+            sharp(file).webp({ quality: 80 }).toFile(webpOut),
+            sharp(file).avif({ quality: 80 }).toFile(avifOut)
+        ]);
+    }));
 }
 
 // -------------------- FAVICONS --------------------
@@ -139,11 +157,9 @@ export function copyFavicons() {
     const rootFavicon = 'source/favicon.ico';
 
     if (fs.existsSync(rootFavicon)) {
-        fs.mkdirSync('build', { recursive: true }); // на всякий случай
+        fs.mkdirSync('build', { recursive: true });
         fs.copyFileSync(rootFavicon, 'build/favicon.ico');
-    }
-
-    return Promise.resolve();
+    } return Promise.resolve();
 }
 
 // -------------------- FONTS --------------------
@@ -165,28 +181,28 @@ export function startServer(done) {
         exec('start chrome http://localhost:3000');
     });
 
-    console.log('👉 http://localhost:3000');
     done();
 }
 
 // -------------------- WATCH --------------------
 export function watchFiles() {
+    gulp.watch('source/**/*.html', processMarkup);
     gulp.watch('source/sass/**/*.scss', processStyles);
     gulp.watch('source/js/**/*.js', processScripts);
-    gulp.watch('source/*.html', processMarkup);
 }
 
 // -------------------- BUILD --------------------
 export const compileProject = gulp.series(
     clean,
     images,
-    gulp.parallel(webpImages, avifImages),
+    modernImages,
     gulp.parallel(
         processMarkup,
         processStyles,
         processScripts,
         copyFavicons,
-        copyFonts
+        copyFonts,
+        sprite
     )
 );
 
