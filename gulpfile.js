@@ -115,14 +115,33 @@ export function sprite() {
 }
 
 
-export function images() {
-    const files = fg.sync('source/img/**/*.{jpg,jpeg,png}');
+export async function images() {
+    const files = fg.sync('source/img/**/*.{jpg,jpeg,png}')
+        .filter(file => !file.includes('favicon'));
 
     for (const file of files) {
         const out = file.replace('source/img', 'build/img');
 
         fs.mkdirSync(path.dirname(out), { recursive: true });
-        fs.copyFileSync(file, out);
+
+        const ext = path.extname(file).toLowerCase();
+
+        try {
+            if (ext === '.jpg' || ext === '.jpeg') {
+                await sharp(file)
+                    .jpeg({ quality: 80 })
+                    .toFile(out);
+            } else if (ext === '.png') {
+                await sharp(file)
+                    .png({ compressionLevel: 9 })
+                    .toFile(out);
+            } else {
+                fs.copyFileSync(file, out);
+            }
+        } catch (err) {
+            console.error('Image processing error:', file, err);
+            fs.copyFileSync(file, out);
+        }
     }
 
     return Promise.resolve();
@@ -146,8 +165,15 @@ export async function modernImages() {
         fs.mkdirSync(path.dirname(avifOut), { recursive: true });
 
         await Promise.all([
-            sharp(file).webp({ quality: 80 }).toFile(webpOut),
-            sharp(file).avif({ quality: 80 }).toFile(avifOut)
+            sharp(file)
+                .resize({ withoutEnlargement: true })
+                .webp({ quality: 80 })
+                .toFile(webpOut),
+
+            sharp(file)
+                .resize({ withoutEnlargement: true })
+                .avif({ quality: 80 })
+                .toFile(avifOut)
         ]);
     }));
 }
