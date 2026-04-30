@@ -2,6 +2,9 @@ import gulp from 'gulp';
 import plumber from 'gulp-plumber';
 import gulpIf from 'gulp-if';
 
+import bemlinter from 'gulp-html-bemlinter';
+import { createRequire } from 'node:module';
+
 import * as dartSass from 'sass';
 import gulpSass from 'gulp-sass';
 
@@ -15,7 +18,7 @@ import rename from 'gulp-rename';
 import terser from 'gulp-terser';
 
 import { deleteAsync } from 'del';
-import browser from 'browser-sync';
+import browserSync from 'browser-sync';
 import { exec } from 'child_process';
 
 import svgo from 'gulp-svgmin';
@@ -26,12 +29,15 @@ import path from 'path';
 import sharp from 'sharp';
 import fg from 'fast-glob';
 
-// -------------------- CONFIG --------------------
+
+const { src } = gulp;
+const require = createRequire(import.meta.url);
+const { htmlValidator } = require('gulp-w3c-html-validator');
 const compileSass = gulpSass(dartSass);
 const isDevelopment = process.env.NODE_ENV !== 'production';
-const server = browser.create();
+const server = browserSync.create();
 
-// -------------------- ERROR --------------------
+
 function onError(task) {
     return function (err) {
         console.error(`[${task}]`, err?.message || err);
@@ -39,10 +45,10 @@ function onError(task) {
     };
 }
 
-// -------------------- CLEAN --------------------
+
 export const clean = () => deleteAsync('build');
 
-// -------------------- HTML --------------------
+
 export function processMarkup() {
     return gulp.src('source/*.html')
         .pipe(plumber({ errorHandler: onError('html') }))
@@ -54,7 +60,20 @@ export function processMarkup() {
         .pipe(server.stream());
 }
 
-// -------------------- STYLES --------------------
+
+export function lintBem() {
+    return src('source/**/*.html')
+        .pipe(bemlinter());
+}
+
+
+export function validateMarkup() {
+    return gulp.src('source/**/*.html')
+        .pipe(htmlValidator.analyzer())
+        .pipe(htmlValidator.reporter({ throwErrors: true }));
+}
+
+
 export function processStyles() {
     return gulp.src('source/sass/**/*.scss', { sourcemaps: true })
         .pipe(plumber({ errorHandler: onError('styles') }))
@@ -71,7 +90,7 @@ export function processStyles() {
         .pipe(server.stream());
 }
 
-// -------------------- JS --------------------
+
 export function processScripts() {
     return gulp.src('source/js/**/*.js', { sourcemaps: isDevelopment })
         .pipe(plumber({ errorHandler: onError('js') }))
@@ -80,7 +99,7 @@ export function processScripts() {
         .pipe(server.stream());
 }
 
-// -------------------- SVG --------------------
+
 export function sprite() {
     return gulp.src('source/img/icons/*.svg')
         .pipe(svgo())
@@ -89,7 +108,7 @@ export function sprite() {
         .pipe(gulp.dest('build/img'));
 }
 
-// -------------------- IMAGES HELPERS --------------------
+
 async function processImages(format, encoder) {
     const files = fg.sync('source/img/**/*.{jpg,jpeg,png}')
         .filter(file => !file.includes('favicon'));
@@ -105,7 +124,7 @@ async function processImages(format, encoder) {
     }
 }
 
-// -------------------- IMAGES --------------------
+
 export function images() {
     const files = fg.sync('source/img/**/*.{jpg,jpeg,png}');
 
@@ -119,7 +138,7 @@ export function images() {
     return Promise.resolve();
 }
 
-// -------------------- MODERN IMAGES --------------------
+
 export async function modernImages() {
     const files = fg.sync('source/img/**/*.{jpg,jpeg,png}')
         .filter(file => !file.includes('favicon'));
@@ -143,7 +162,7 @@ export async function modernImages() {
     }));
 }
 
-// -------------------- FAVICONS --------------------
+
 export function copyFavicons() {
     const files = fg.sync('source/img/favicon/**/*.{png,ico,svg,webmanifest}');
 
@@ -162,13 +181,13 @@ export function copyFavicons() {
     } return Promise.resolve();
 }
 
-// -------------------- FONTS --------------------
+
 export function copyFonts() {
     return gulp.src('source/fonts/**/*.{woff,woff2,ttf,otf}')
         .pipe(gulp.dest('build/fonts'));
 }
 
-// -------------------- SERVER --------------------
+
 export function startServer(done) {
     server.init({
         server: { baseDir: 'build' },
@@ -184,14 +203,14 @@ export function startServer(done) {
     done();
 }
 
-// -------------------- WATCH --------------------
+
 export function watchFiles() {
     gulp.watch('source/**/*.html', processMarkup);
     gulp.watch('source/sass/**/*.scss', processStyles);
     gulp.watch('source/js/**/*.js', processScripts);
 }
 
-// -------------------- BUILD --------------------
+
 export const compileProject = gulp.series(
     clean,
     images,
@@ -203,15 +222,17 @@ export const compileProject = gulp.series(
         copyFavicons,
         copyFonts,
         sprite
-    )
+    ),
+    validateMarkup,
+    lintBem
 );
 
-// -------------------- PROD --------------------
+
 export const buildProd = gulp.series(
     compileProject
 );
 
-// -------------------- DEV --------------------
+
 export const runDev = gulp.series(
     compileProject,
     gulp.parallel(startServer, watchFiles)
