@@ -101,27 +101,17 @@ export function processScripts() {
 
 
 export function sprite() {
-    return gulp.src('source/img/icons/*.svg')
+    const iconsPath = 'source/img/icons';
+
+    if (!fs.existsSync(iconsPath)) {
+        return Promise.resolve();
+    }
+
+    return gulp.src('source/img/icons/*.svg', { allowEmpty: true })
         .pipe(svgo())
         .pipe(svgstore({ inlineSvg: true }))
         .pipe(rename('sprite.svg'))
         .pipe(gulp.dest('build/img'));
-}
-
-
-async function processImages(format, encoder) {
-    const files = fg.sync('source/img/**/*.{jpg,jpeg,png}')
-        .filter(file => !file.includes('favicon'));
-
-    for (const file of files) {
-        const output = file
-            .replace('source/img', `build/img/${format}`)
-            .replace(/\.(jpg|jpeg|png)$/, `.${format}`);
-
-        fs.mkdirSync(path.dirname(output), { recursive: true });
-
-        await encoder(file, output);
-    }
 }
 
 
