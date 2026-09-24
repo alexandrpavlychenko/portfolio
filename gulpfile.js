@@ -23,6 +23,9 @@ import { exec } from 'child_process';
 
 import svgo from 'gulp-svgmin';
 import svgstore from 'gulp-svgstore';
+import { load } from 'cheerio';
+import through2 from 'through2';
+import Vinyl from 'vinyl';
 
 import fs from 'fs';
 import path from 'path';
@@ -99,7 +102,6 @@ export function processScripts() {
         .pipe(server.stream());
 }
 
-
 export function sprite() {
     const iconsPath = 'source/img/icons';
 
@@ -107,13 +109,95 @@ export function sprite() {
         return Promise.resolve();
     }
 
-    return gulp.src('source/img/icons/*.svg', { allowEmpty: true })
-        .pipe(svgo())
-        .pipe(svgstore({ inlineSvg: true }))
+    return gulp.src('source/img/icons/*.svg', {allowEmpty: true})
+        .pipe(svgo({
+            full: true,
+            plugins: []
+        }))
+        .pipe(svgstore({inlineSvg: true}))
+        .pipe(through2.obj(function (file, encoding, callback) {
+            const svg = file.contents.toString();
+
+            const $ = load(svg, {
+                xml: true
+            });
+
+            $('symbol').attr({
+                'aria-hidden': 'true',
+                'focusable': 'false'
+            });
+
+            file.contents = Buffer.from($.xml());
+
+            callback(null, file);
+        }))
         .pipe(rename('sprite.svg'))
-        .pipe(gulp.dest('build/img'));
+        .pipe(gulp.dest('build/img/icons'));
 }
 
+export function spriteBg() {
+    const iconsPath = 'source/img/icons';
+
+    if (!fs.existsSync(iconsPath)) {
+        return Promise.resolve();
+    }
+
+    const files = [];
+
+    return gulp.src(`${iconsPath}/*.svg`, {allowEmpty: true})
+        .pipe(svgo({
+            full: true,
+            plugins: []
+        }))
+        .pipe(through2.obj(function (file, encoding, callback) {
+            files.push(file);
+            callback();
+        }, function (callback) {
+            const $ = load('<svg xmlns="http://www.w3.org/2000/svg"></svg>', {
+                xml: true
+            });
+
+            const root = $('svg');
+            const size = 24;
+
+            files.forEach((file, index) => {
+                const svg = load(file.contents.toString(), {
+                    xml: true
+                });
+
+                const id = file.stem;
+                const offset = index * size;
+
+                svg('path').each((_, path) => {
+                    const pathElement = svg(path);
+
+                    if (offset !== 0) {
+                        pathElement.attr('transform', `translate(0 ${offset})`);
+                    }
+
+                    root.append(pathElement);
+                });
+
+                root.append(
+                    $('<view>').attr({
+                        id: `${id}-view`,
+                        viewBox: `0 ${offset} ${size} ${size}`
+                    })
+                );
+            });
+
+            root.attr('viewBox', `0 0 ${size} ${files.length * size}`);
+
+            const output = new Vinyl({
+                path: 'sprite-bg.svg',
+                contents: Buffer.from($.xml())
+            });
+
+            this.push(output);
+            callback();
+        }))
+        .pipe(gulp.dest('build/img/icons'));
+}
 
 export async function images() {
     const files = fg.sync('source/img/**/*.{jpg,jpeg,png}')
@@ -199,7 +283,7 @@ export function copyFavicons() {
 
 
 export function copyFonts() {
-    return gulp.src('source/fonts/**/*.{woff,woff2,ttf,otf}')
+    return gulp.src('source/fonts/**/*.{woff,woff2,ttf,otf}', { encoding: false })
         .pipe(gulp.dest('build/fonts'));
 }
 
@@ -237,7 +321,8 @@ export const compileProject = gulp.series(
         processScripts,
         copyFavicons,
         copyFonts,
-        sprite
+        sprite,
+        spriteBg
     ),
     validateMarkup,
     lintBem
