@@ -1,220 +1,110 @@
+@use "fonts.scss";
 @use "variables.scss" as var;
 
+
 @mixin font-main-text {
-    font-family: var.$font-main-text;
-    font-size: 16px;
-    line-height: 1.55;
+    font-family: var.$main-font;
+    font-size: var.$font-s;
+    line-height: var.$line-height-mobile-m;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
-    font-kerning: normal;
-    letter-spacing: normal;
-    font-variant-ligatures: common-ligatures;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-variant-numeric: oldstyle-nums proportional-nums;
-    color: var.$color-verily-black;
+    color: var.$color-main-text;
 
     @media (min-width: var.$tablet-width) {
-        font-size: 17px;
-        line-height: 1.6;
+        font-size: var.$font-desktop-m;
+        line-height: var.$line-height-tablet-m;
     }
 
     @media (min-width: var.$desktop-width) {
-        font-size: 18px;
-        line-height: 1.65;
+        line-height: var.$line-height-desktop-m;
     }
 }
 
-@mixin font-main-text-uppercase {
-    font-family: var.$font-main-text-accented;
-    font-size: 16px;
-    line-height: 1.55;
-    font-weight: 700;
-    color: var.$color-verily-black;
-
-    @media (min-width: var.$tablet-width) {
-        font-size: 17px;
-        line-height: 1.6;
-    }
-
-    @media (min-width: var.$desktop-width) {
-        font-size: 18px;
-        line-height: 1.65;
-    }
-}
-
-@mixin font-main-menu {
-    font-family: var.$font-quotes;
-    font-size: 18px;
-    line-height: 1.2;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    color: var.$color-verily-white;
-
-    @media (min-width: var.$tablet-width) {
-        font-size: 20px;
-        letter-spacing: 0.05em;
-    }
-
-    @media (min-width: var.$desktop-width) {
-        font-size: 22px;
-        letter-spacing: 0.06em;
-    }
-}
-
-@mixin font-main-menu-uppercase {
+@mixin font-skills-text {
+    font-size: var.$font-skills;
+    line-height: var.$line-height-desktop-m;
     text-transform: uppercase;
-
-    letter-spacing: 0.06em;
-
-    @media (min-width: var.$tablet-width) {
-        letter-spacing: 0.06em;
-    }
-
-    @media (min-width: var.$desktop-width) {
-        letter-spacing: 0.07em;
-    }
+    letter-spacing: 1px;
+    color: var.$color-main-text;
 }
 
-@mixin font-quotes-ordinary {
-    font-family: var.$font-quotes;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var.$color-verily-black;
-
-    @media (min-width: var.$tablet-width) {
-        font-size: 17px;
-        line-height: 1.55;
-    }
-
-    @media (min-width: var.$desktop-width) {
-        font-size: 18px;
-        line-height: 1.6;
-    }
-
-    @media (min-width: var.$max-desktop-width) {
-        font-size: 20px;
-        line-height: 1.58;
-    }
-}
-
-@mixin font-quotes-ordinary-uppercase {
-    font-family: var.$font-quotes;
-    font-size: 16px;
-    line-height: 1.5;
+@mixin font-button {
+    font-family: var.$main-font;
+    font-size: var.$font-s;
+    line-height: var.$line-height-desktop-m;
+    font-weight: var.$medium;
+    text-align: center;
     text-transform: uppercase;
-    letter-spacing: 0.02em;
-    color: var.$color-verily-black;
+    text-decoration: none;
+    letter-spacing: 1px;
+    color: var.$color-alter-bg;
+}
+
+@mixin font-subsection-heading {
+    font-size: var.$font-mobile-l;
+    line-height: var.$line-height-mobile-l;
+    font-weight: var.$medium;
+    text-align: center;
 
     @media (min-width: var.$tablet-width) {
-        font-size: 17px;
-        line-height: 1.55;
+        font-size: var.$font-desktop-l;
+        line-height: var.$line-height-desktop-l;
     }
 
     @media (min-width: var.$desktop-width) {
-        font-size: 18px;
-        line-height: 1.6;
-    }
-
-    @media (min-width: var.$max-desktop-width) {
-        font-size: 20px;
-        line-height: 1.55;
+        text-align: left;
     }
 }
 
-
-@mixin font-quotes-accented {
-    font-family: var.$font-quotes;
-    font-size: 18px;
-    line-height: 1.45;
-    color: var.$color-verily-black;
+@mixin font-promo-subscription-text {
+    font-size: var.$font-mobile-l;
+    line-height: var.$line-height-mobile-l;
+    text-align: center;
+    color: var.$color-accented-text;
 
     @media (min-width: var.$tablet-width) {
-        font-size: 22px;
-        line-height: 1.5;
+        font-size: var.$font-desktop-l;
+        line-height: var.$line-height-desktop-ll;
     }
 
     @media (min-width: var.$desktop-width) {
-        font-size: 20px;
-        line-height: 1.52;
-    }
-
-    @media (min-width: var.$max-desktop-width) {
-        font-size: 22px;
-        line-height: 1.5;
+        text-align: left;
     }
 }
 
-@mixin font-quotes-accented-uppercase {
-    font-family: var.$font-quotes;
-    font-size: 18px;
-    line-height: 1.45;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    color: var.$color-verily-black;
+@mixin font-section-heading {
+    font-size: var.$font-mobile-xl;
+    line-height: var.$line-height-mobile-xl;
+    font-weight: var.$medium;
+    text-align: center;
+    color: var.$color-accented-text;
 
     @media (min-width: var.$tablet-width) {
-        font-size: 19px;
-        line-height: 1.5;
+        font-size: var.$font-tablet-xl;
+        line-height: var.$line-height-tablet-xl;
     }
 
     @media (min-width: var.$desktop-width) {
-        font-size: 20px;
-        line-height: 1.55;
-    }
-
-    @media (min-width: var.$max-desktop-width) {
-        font-size: 22px;
-        line-height: 1.56;
+        font-size: var.$font-desktop-xl;
+        line-height: var.$line-height-desktop-xl;
     }
 }
 
-@mixin font-footer-author-source {
-    font-family: var.$font-main-text;
-    font-size: 13px;
-    line-height: 1.2;
-    color: var.$color-verily-white;
+@mixin font-main-heading {
+    font-size: var.$font-mobile-xxl;
+    line-height: var.$line-height-mobile-xxl;
+    font-weight: var.$medium;
+    text-align: center;
 
     @media (min-width: var.$tablet-width) {
-        font-size: 14px;
-    }
-}
-
-@mixin font-footer-author-text {
-    font-family: var.$font-comments;
-    font-size: 15px;
-    line-height: 1.4;
-    letter-spacing: 0.01em;
-    color: var.$color-verily-white;
-
-    @media (min-width: var.$tablet-width) {
-        font-size: 16px;
-        line-height: 1.35;
+        font-size: var.$font-tablet-xxl;
+        line-height: var.$line-height-tablet-xxl;
     }
 
     @media (min-width: var.$desktop-width) {
-        font-size: 18px;
-        line-height: 1.35;
-    }
-}
-
-
-@mixin font-footer-author-link {
-    font-family: var.$font-comments;
-    font-size: 15px;
-    line-height: 1.4;
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    color: var.$color-fundamental-gold;
-
-    @media (min-width: var.$tablet-width) {
-        font-size: 16px;
-        line-height: 1.35;
-    }
-
-    @media (min-width: var.$desktop-width) {
-        font-size: 18px;
-        line-height: 1.35;
+        font-size: var.$font-desktop-xxl;
+        line-height: var.$line-height-desktop-xxl;
+        text-align: left;
     }
 }
 

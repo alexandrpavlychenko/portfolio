@@ -6,21 +6,11 @@
     width: 100%;
 
     @media (min-width: var.$tablet-width) {
-        padding: 0 40px;
-        max-width: 1199px;
+        padding: 0 60px;
     }
 
     @media (min-width: var.$desktop-width) {
-        padding: 0 60px;
-        max-width: 1439px;
-    }
-
-    @media (min-width: var.$max-desktop-width) {
-        padding: 0 72px;
-        max-width: var.$max-desktop-width;
-    }
-
-    @media (min-width: 1921px) {
-        max-width: var.$max-wide-width;
+        padding: 0 16px;
+        max-width: 1408px;
     }
 }
